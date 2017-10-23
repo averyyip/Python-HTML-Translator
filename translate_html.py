@@ -2,8 +2,6 @@ from googletrans import Translator
 import glob2
 from multiprocessing import Pool
 from bs4 import BeautifulSoup
-import os
-import urllib.request
 
 def run(html_path):
 	html_paths = glob2.glob(html_path + "*.html")
@@ -39,10 +37,10 @@ def translator(html_path):
 def translate_html(html_folder, output_folder, lang="en"):
 	global trans_lang
 	trans_lang = lang
-	run()
+	run(html_folder)
 
 if __name__ == "__main__":
 	output_path = "copenhagen_translated_htmls\\"
-	html_folder_path = "copenhagen_htmls\\"
-	run(html_folder_path)
+	input_path = "copenhagen_htmls\\"
+	translate_html(input_path)
 	print("Complete")
