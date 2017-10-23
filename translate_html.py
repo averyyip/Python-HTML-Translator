@@ -5,11 +5,8 @@ from bs4 import BeautifulSoup
 import os
 import urllib.request
 
-html_folder_path = "copenhagen_htmls\\"
-output_folder_path = "copenhagen_translated_htmls\\"
-
-def run():
-	html_paths = glob2.glob(html_folder_path + "*.html")
+def run(html_path):
+	html_paths = glob2.glob(html_path + "*.html")
 	p = Pool(5)
 	p.map(translator, html_paths)
 
@@ -26,11 +23,11 @@ def translator(html_path):
 
 	for element in all_ns:
 		text = element.string
-		text = text.replace(u"\u2026", "")
+		text = text.replace(u"\u2026", "") #for handling weird windows encoding
 		if text:
 			all_text.append(text)
 
-	translated = translator.translate(all_text, dest="en")
+	translated = translator.translate(all_text, dest=trans_lang)
 
 	for i in range(len(all_ns)):
 		element = all_ns[i]
@@ -39,6 +36,13 @@ def translator(html_path):
 	with open(output_path, "wb") as file:
 		file.write(soup.prettify("utf-8"))
 
-if __name__ == "__main__":
+def translate_html(html_folder, output_folder, lang="en"):
+	global trans_lang
+	trans_lang = lang
 	run()
+
+if __name__ == "__main__":
+	output_path = "copenhagen_translated_htmls\\"
+	html_folder_path = "copenhagen_htmls\\"
+	run(html_folder_path)
 	print("Complete")
